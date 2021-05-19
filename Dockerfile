@@ -1,4 +1,5 @@
 FROM php:7.4-cli-alpine AS build
+ARG WS_VERSION
 
 RUN apk add --no-cache git icu-dev
 
@@ -20,9 +21,9 @@ RUN \
     # extensions
     && docker-php-ext-install intl \
     # workspace
-    && wget -O /tmp/ws.tar.gz https://github.com/my127/workspace/archive/0.1.x.tar.gz \
+    && wget -O /tmp/ws.tar.gz "https://github.com/my127/workspace/archive/${WS_VERSION}.tar.gz" \
     && tar -C /usr/src -xvf /tmp/ws.tar.gz \
-    && cd /usr/src/workspace-0.1.x \
+    && cd "/usr/src/workspace-${WS_VERSION}" \
     && composer install \
     && composer compile
 
@@ -40,7 +41,7 @@ RUN \
     && wget -O /usr/local/bin/kubeseal https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.12.5/kubeseal-linux-amd64 \
     && chmod +x /usr/local/bin/kubeseal
 
-COPY --from=build /usr/src/workspace-0.1.x/my127ws.phar /usr/local/bin/ws
+COPY --from=build "/usr/src/workspace-${WS_VERSION}/my127ws.phar" /usr/local/bin/ws
 RUN chmod +x /usr/local/bin/ws
 
 ENTRYPOINT [ "/usr/local/bin/ws" ]
