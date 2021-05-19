@@ -1,5 +1,5 @@
 FROM php:7.4-cli-alpine AS build
-ARG WS_VERSION
+ARG WS_VERSION=0.2.x
 
 RUN apk add --no-cache git icu-dev
 
@@ -28,7 +28,7 @@ RUN \
     && composer compile
 
 FROM php:7.4-cli-alpine
-ARG WS_VERSION
+ARG WS_VERSION=0.2.x
 ARG HELM_VERSION=2.17.0
 
 RUN \
