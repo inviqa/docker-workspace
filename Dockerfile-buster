@@ -1,0 +1,72 @@
+FROM php:7.4-cli-buster AS build
+ARG WS_VERSION=0.2.x
+
+RUN echo 'APT::Install-Recommends 0;' >> /etc/apt/apt.conf.d/01norecommends \
+ && echo 'APT::Install-Suggests 0;' >> /etc/apt/apt.conf.d/01norecommends \
+ && apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get -s dist-upgrade | grep "^Inst" | \
+      grep -i securi | awk -F " " '{print $2}' | \
+      xargs apt-get -qq -y --no-install-recommends install \
+ \
+ && DEBIAN_FRONTEND=noninteractive apt-get -qq -y --no-install-recommends install \
+   libicu-dev libzip-dev unzip zip \
+ && apt-get auto-remove -qq -y \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*\
+ # box \
+ && curl --silent --show-error --fail --location --output /usr/local/bin/box https://github.com/box-project/box/releases/download/3.11.1/box.phar \
+ && chmod +x /usr/local/bin/box \
+ # composer
+ && curl --silent --show-error --fail --location --output /tmp/installer.php https://raw.githubusercontent.com/composer/getcomposer.org/e3e43bde99447de1c13da5d1027545be81736b27/web/installer \
+ && php -r " \
+     \$signature = '756890a4488ce9024fc62c56153228907f1545c228516cbf63f885e036d37e9a59d27d63f46af1d4d07ee0f76181c7d3'; \
+     \$hash = hash('sha384', file_get_contents('/tmp/installer.php')); \
+     if (!hash_equals(\$signature, \$hash)) { \
+         unlink('/tmp/installer.php'); \
+         echo 'Integrity check failed, installer is either corrupt or worse.' . PHP_EOL; \
+         exit(1); \
+     }" \
+ && php /tmp/installer.php --no-ansi --install-dir=/usr/bin --filename=composer \
+ # extensions
+ && docker-php-ext-install intl zip \
+ # workspace
+ && curl --silent --show-error --fail --location --output /tmp/ws.tar.gz "https://github.com/my127/workspace/archive/${WS_VERSION}.tar.gz" \
+ && tar -C /usr/src -xvf /tmp/ws.tar.gz \
+ && cd "/usr/src/workspace-${WS_VERSION}" \
+ && composer install \
+ && composer compile
+
+FROM php:7.4-cli-buster
+ARG WS_VERSION=0.2.x
+ARG HELM_VERSION=2.17.0
+
+RUN curl -fsSL https://get.docker.com -o get-docker.sh \
+ && sh get-docker.sh \
+ && curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose \
+ && chmod +x /usr/local/bin/docker-compose \
+ && rm -f get-docker.sh \
+ \
+ && echo 'APT::Install-Recommends 0;' >> /etc/apt/apt.conf.d/01norecommends \
+ && echo 'APT::Install-Suggests 0;' >> /etc/apt/apt.conf.d/01norecommends \
+ && apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get -s dist-upgrade | grep "^Inst" | \
+      grep -i securi | awk -F " " '{print $2}' | \
+      xargs apt-get -qq -y --no-install-recommends install \
+ \
+ && DEBIAN_FRONTEND=noninteractive apt-get -qq -y --no-install-recommends install \
+   awscli git openssh-client jq rsync \
+ && apt-get auto-remove -qq -y \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/* \
+ \
+ && curl --silent --show-error --fail --location --output helm.tar.gz "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" \
+ && tar -C /usr/local/bin --strip-components=1 -zxvf helm.tar.gz "linux-amd64/helm" \
+ && rm ./helm.tar.gz \
+ # kubeseal
+ && curl --silent --show-error --fail --location --output /usr/local/bin/kubeseal https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.12.5/kubeseal-linux-amd64 \
+ && chmod +x /usr/local/bin/kubeseal
+
+COPY --from=build "/usr/src/workspace-${WS_VERSION}/my127ws.phar" /usr/local/bin/ws
+RUN chmod +x /usr/local/bin/ws
+
+ENTRYPOINT [ "/usr/local/bin/ws" ]

@@ -7,6 +7,14 @@ services:
       args:
         WS_VERSION: 0.2.x
 
+  0.2.x-buster:
+    image: quay.io/inviqa_images/workspace:0.2.x-dev-buster
+    build:
+      context: .
+      dockerfile: Dockerfile-buster
+      args:
+        WS_VERSION: 0.2.x
+
   0.1.x:
     image: quay.io/inviqa_images/workspace:0.1.x-dev
     build:
