@@ -42,6 +42,6 @@ RUN \
     && chmod +x /usr/local/bin/kubeseal
 
 COPY --from=build "/usr/src/workspace-${WS_VERSION}/my127ws.phar" /usr/local/bin/ws
-RUN chmod +x /usr/local/bin/ws
+RUN chmod +x /usr/local/bin/ws && /usr/local/bin/ws
 
 ENTRYPOINT [ "/usr/local/bin/ws" ]
