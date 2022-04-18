@@ -1,7 +1,7 @@
 FROM php:7.4-cli-alpine AS build
 ARG WS_VERSION=0.2.x
 
-RUN apk add --no-cache git icu-dev
+RUN apk add --no-cache bash git icu-dev
 
 RUN \
     # box
@@ -39,9 +39,12 @@ RUN \
     && rm ./helm.tar.gz \
     # kubeseal
     && wget -O /usr/local/bin/kubeseal https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.12.5/kubeseal-linux-amd64 \
-    && chmod +x /usr/local/bin/kubeseal
+    && chmod +x /usr/local/bin/kubeseal \
+    && addgroup -g 998 docker \
+    && adduser -u 1000 -D ws \
+    && adduser ws docker
 
-COPY --from=build "/usr/src/workspace-${WS_VERSION}/my127ws.phar" /usr/local/bin/ws
+COPY --from=build "/usr/src/workspace-${WS_VERSION}/ws.phar" /usr/local/bin/ws
 RUN chmod +x /usr/local/bin/ws && /usr/local/bin/ws
 
 ENTRYPOINT [ "/usr/local/bin/ws" ]
