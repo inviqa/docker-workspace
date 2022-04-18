@@ -46,6 +46,10 @@ RUN \
     && wget -O helm.tar.gz "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" \
     && tar -C /usr/local/bin --strip-components=1 -zxvf helm.tar.gz "linux-amd64/helm" \
     && rm ./helm.tar.gz \
+    # mutagen
+    && wget -O mutagen.tar.gz  "https://github.com/mutagen-io/mutagen/releases/download/v0.11.8/mutagen_linux_amd64_v0.11.8.tar.gz" \
+    && tar -C /usr/local/bin -zxvf mutagen.tar.gz \
+    && rm ./mutagen.tar.gz \
     # kubeseal
     && wget -O /usr/local/bin/kubeseal https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.12.5/kubeseal-linux-amd64 \
     && chmod +x /usr/local/bin/kubeseal \
