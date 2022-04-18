@@ -32,7 +32,16 @@ ARG WS_VERSION=0.2.x
 ARG HELM_VERSION=2.17.0
 
 RUN \
-    apk add --no-cache aws-cli docker-cli bash docker-compose git openssh-client jq rsync \
+    apk add --no-cache \
+      aws-cli \
+      bash \
+      docker-cli \
+      docker-compose \
+      git \
+      grep \
+      jq \
+      openssh-client \
+      rsync \
     # helm
     && wget -O helm.tar.gz "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" \
     && tar -C /usr/local/bin --strip-components=1 -zxvf helm.tar.gz "linux-amd64/helm" \
