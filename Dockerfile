@@ -29,7 +29,6 @@ RUN \
 
 FROM php:7.4-cli-alpine
 ARG WS_VERSION=0.2.x
-ARG HELM_VERSION=2.17.0
 
 RUN \
     apk add --no-cache \
@@ -42,8 +41,13 @@ RUN \
       jq \
       openssh-client \
       rsync \
-    # helm
-    && wget -O helm.tar.gz "https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz" \
+    # helm2
+    && wget -O helm.tar.gz "https://get.helm.sh/helm-v2.17.0-linux-amd64.tar.gz" \
+    && tar -C /usr/local/bin --strip-components=1 -zxvf helm.tar.gz "linux-amd64/helm" \
+    && mv /usr/local/bin/helm /usr/local/bin/helm2 \
+    && rm ./helm.tar.gz \
+    # helm 
+    && wget -O helm.tar.gz "https://get.helm.sh/helm-v3.8.2-linux-amd64.tar.gz" \
     && tar -C /usr/local/bin --strip-components=1 -zxvf helm.tar.gz "linux-amd64/helm" \
     && rm ./helm.tar.gz \
     # mutagen
