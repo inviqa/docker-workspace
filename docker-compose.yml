@@ -13,7 +13,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-buster
-      target: build
       args:
         WS_VERSION: 0.2.x
       x-bake:
