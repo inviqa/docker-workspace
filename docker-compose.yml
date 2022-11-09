@@ -1,23 +1,31 @@
-version: '3.7'
 services:
   0.2.x:
-    image: quay.io/inviqa_images/workspace:0.2.x-dev
     build:
       context: .
       args:
         WS_VERSION: 0.2.x
+      x-bake:
+        tags:
+          - quay.io/inviqa_images/workspace:0.2.x-dev
+          - quay.io/inviqa_images/workspace:latest
 
   0.2.x-buster:
-    image: quay.io/inviqa_images/workspace:0.2.x-dev-buster
     build:
       context: .
       dockerfile: Dockerfile-buster
+      target: build
       args:
         WS_VERSION: 0.2.x
+      x-bake:
+        tags:
+          - quay.io/inviqa_images/workspace:0.2.x-dev-buster
 
-  0.1.x:
-    image: quay.io/inviqa_images/workspace:0.1.x-dev
-    build:
-      context: .
-      args:
-        WS_VERSION: 0.1.x
+# build is broken due to transitive dependency requiring union types in PHP
+  # 0.1.x:
+  #   build:
+  #     context: .
+  #     args:
+  #       WS_VERSION: 0.1.x
+  #     x-bake:
+  #       tags:
+  #         - quay.io/inviqa_images/workspace:0.1.x-dev
