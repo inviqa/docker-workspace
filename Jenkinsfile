@@ -18,12 +18,12 @@ pipeline {
                 expression { BRANCH_NAME ==~ /^\d+\.\d+\.x-dev$/ }
             }
             steps {
-                sh 'echo "$DOCKER_REGISTRY_CREDS_PSW" | docker login --username "$DOCKER_REGISTRY_CREDS_USR" --password-stdin docker.io'
+                sh 'echo "$DOCKER_REGISTRY_CREDS_PSW" | docker login --username "$DOCKER_REGISTRY_CREDS_USR" --password-stdin quay.io'
                 sh 'docker buildx bake --push'
             }
             post {
                 always {
-                    sh 'docker logout docker.io'
+                    sh 'docker logout quay.io'
                 }
             }
         }
