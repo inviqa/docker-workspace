@@ -15,7 +15,7 @@ pipeline {
                 DOCKER_REGISTRY_CREDS = credentials('docker-registry-credentials')
             }
             when {
-                branch 'main'
+                expression { BRANCH_NAME ==~ /^\d+\.\d+\.x-dev$/ }
             }
             steps {
                 sh 'echo "$DOCKER_REGISTRY_CREDS_PSW" | docker login --username "$DOCKER_REGISTRY_CREDS_USR" --password-stdin docker.io'
