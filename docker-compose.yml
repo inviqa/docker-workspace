@@ -2,6 +2,7 @@ services:
   0.2.x:
     build:
       context: .
+      target: alpine
       args:
         WS_VERSION: 0.2.x
       x-bake:
@@ -12,7 +13,7 @@ services:
   0.2.x-buster:
     build:
       context: .
-      dockerfile: Dockerfile-buster
+      target: buster
       args:
         WS_VERSION: 0.2.x
       x-bake:
@@ -23,6 +24,7 @@ services:
   # 0.1.x:
   #   build:
   #     context: .
+  #     target: alpine
   #     args:
   #       WS_VERSION: 0.1.x
   #     x-bake:
