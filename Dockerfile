@@ -24,6 +24,7 @@ RUN \
     && wget -O /tmp/ws.tar.gz "https://github.com/my127/workspace/archive/${WS_VERSION}.tar.gz" \
     && tar -C /usr/src -xvf /tmp/ws.tar.gz \
     && cd "/usr/src/workspace-${WS_VERSION}" \
+    && export COMPOSER_ALLOW_SUPERUSER=1 \
     && composer install \
     && composer compile
 
