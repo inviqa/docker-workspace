@@ -84,7 +84,7 @@ RUN <<EOF
 
   # mutagen
   if [ "$TARGETARCH" = amd64 ]; then
-    wget -O mutagen.tar.gz  "https://github.com/mutagen-io/mutagen/releases/download/v0.16.2/mutagen_linux_${TARGETARCH}_v0.11.8.tar.gz"
+    wget -O mutagen.tar.gz  "https://github.com/mutagen-io/mutagen/releases/download/v0.16.2/mutagen_linux_${TARGETARCH}_v0.16.2.tar.gz"
     tar -C /usr/local/bin -zxvf mutagen.tar.gz
     rm ./mutagen.tar.gz
   fi
