@@ -101,7 +101,7 @@ RUN <<EOF
 EOF
 
 COPY --from=build "/usr/src/workspace/ws.phar" /usr/local/bin/ws
-RUN chmod +x /usr/local/bin/ws && /usr/local/bin/ws
+RUN chmod +x /usr/local/bin/ws && /usr/local/bin/ws --help
 
 ENTRYPOINT [ "/usr/local/bin/ws" ]
 
