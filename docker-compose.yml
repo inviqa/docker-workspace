@@ -5,7 +5,7 @@ services:
       target: alpine
       args:
         WS_VERSION: 0.3.x
-        PHP_MAJOR_VERSION: 8.1
+        PHP_MAJOR_VERSION: '8.1'
       x-bake:
         tags:
           - quay.io/inviqa_images/workspace:0.3.x-dev
@@ -16,7 +16,7 @@ services:
       target: alpine
       args:
         WS_VERSION: 0.2.x
-        PHP_MAJOR_VERSION: 8.0
+        PHP_MAJOR_VERSION: '8.0'
       x-bake:
         tags:
           - quay.io/inviqa_images/workspace:0.2.x-dev
@@ -27,7 +27,7 @@ services:
       target: buster
       args:
         WS_VERSION: 0.2.x
-        PHP_MAJOR_VERSION: 8.0
+        PHP_MAJOR_VERSION: '8.0'
       x-bake:
         tags:
           - quay.io/inviqa_images/workspace:0.2.x-dev-buster
