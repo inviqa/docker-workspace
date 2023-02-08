@@ -4,7 +4,7 @@ services:
       context: .
       target: alpine
       args:
-        WS_VERSION: 0.2.x
+        WS_VERSION: 0.3.x
       x-bake:
         tags:
           - quay.io/inviqa_images/workspace:0.3.x-dev
