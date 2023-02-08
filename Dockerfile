@@ -3,7 +3,8 @@ ARG BUILDX_VERSION=0.9.1
 ARG COMPOSE_VERSION=2.14.0
 ARG HELM_VERSION=3.10.2
 ARG KUBESEAL_VERSION=0.17.5
-FROM --platform=$BUILDPLATFORM php:8.0-cli-alpine AS build
+ARG PHP_MAJOR_VERSION=8.1
+FROM --platform=$BUILDPLATFORM php:${PHP_MAJOR_VERSION}-cli-alpine AS build
 ARG WS_VERSION=0.2.x
 
 RUN apk add --no-cache bash git icu-dev
@@ -43,7 +44,7 @@ EOF
 
 FROM docker/buildx-bin:$BUILDX_VERSION as buildx
 
-FROM php:8.0-cli-alpine as alpine
+FROM php:${PHP_MAJOR_VERSION}-cli-alpine as alpine
 ARG TARGETARCH
 ARG COMPOSE_VERSION
 ARG HELM_VERSION
@@ -104,7 +105,7 @@ RUN chmod +x /usr/local/bin/ws && /usr/local/bin/ws
 
 ENTRYPOINT [ "/usr/local/bin/ws" ]
 
-FROM php:8.0-cli-buster as buster
+FROM php:${PHP_MAJOR_VERSION}-cli-buster as buster
 ARG TARGETARCH
 ARG COMPOSE_VERSION
 ARG HELM_VERSION
