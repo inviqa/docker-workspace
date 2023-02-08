@@ -1,4 +1,14 @@
 services:
+  0.3.x:
+    build:
+      context: .
+      target: alpine
+      args:
+        WS_VERSION: 0.2.x
+      x-bake:
+        tags:
+          - quay.io/inviqa_images/workspace:0.3.x-dev
+          - quay.io/inviqa_images/workspace:latest
   0.2.x:
     build:
       context: .
@@ -8,7 +18,6 @@ services:
       x-bake:
         tags:
           - quay.io/inviqa_images/workspace:0.2.x-dev
-          - quay.io/inviqa_images/workspace:latest
 
   0.2.x-buster:
     build:
