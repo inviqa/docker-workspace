@@ -4,7 +4,7 @@ ARG COMPOSE_VERSION=2.17.2
 ARG HELM_VERSION=3.10.2
 ARG KUBESEAL_VERSION=0.17.5
 ARG PHP_MAJOR_VERSION=8.1
-FROM --platform=$BUILDPLATFORM php:${PHP_MAJOR_VERSION}-cli-alpine AS build
+FROM --platform=$BUILDPLATFORM php:${PHP_MAJOR_VERSION}-cli-alpine3.17 AS build
 ARG WS_VERSION=0.2.x
 
 RUN apk add --no-cache bash git icu-dev
@@ -44,7 +44,7 @@ EOF
 
 FROM docker/buildx-bin:$BUILDX_VERSION as buildx
 
-FROM php:${PHP_MAJOR_VERSION}-cli-alpine as alpine
+FROM php:${PHP_MAJOR_VERSION}-cli-alpine3.17 as alpine
 ARG TARGETARCH
 ARG COMPOSE_VERSION
 ARG HELM_VERSION
