@@ -74,6 +74,11 @@ RUN <<EOF
   wget -O /usr/libexec/docker/cli-plugins/docker-compose "https://github.com/docker/compose/releases/download/v${COMPOSE_VERSION}/docker-compose-linux-$(uname -m)"
   chmod +x  /usr/libexec/docker/cli-plugins/docker-compose
 
+  # docker compose v2 standalone alias
+  if [ "$COMPOSE_V1_INSTALL" != yes ]; then
+    ln -s /usr/libexec/docker/cli-plugins/docker-compose /usr/bin/docker-compose
+  fi
+
   # helm2
   wget -O helm.tar.gz "https://get.helm.sh/helm-v2.17.0-linux-${TARGETARCH}.tar.gz"
   tar -C /usr/local/bin --strip-components=1 -zxvf helm.tar.gz "linux-${TARGETARCH}/helm"
@@ -141,6 +146,11 @@ RUN <<EOF
   mkdir -p /usr/libexec/docker/cli-plugins
   curl --silent --show-error --fail --location -o /usr/libexec/docker/cli-plugins/docker-compose "https://github.com/docker/compose/releases/download/v${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)"
   chmod +x  /usr/libexec/docker/cli-plugins/docker-compose
+
+  # docker compose v2 standalone alias
+  if [ "$COMPOSE_V1_INSTALL" != yes ]; then
+    ln -s /usr/libexec/docker/cli-plugins/docker-compose /usr/bin/docker-compose
+  fi
 
   DEBIAN_FRONTEND=noninteractive apt-get -qq -y --no-install-recommends install \
     apt-transport-https ca-certificates curl gnupg
