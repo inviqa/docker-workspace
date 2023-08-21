@@ -48,6 +48,7 @@ FROM docker/buildx-bin:$BUILDX_VERSION as buildx
 FROM php:${PHP_MAJOR_VERSION}-cli-alpine${ALPINE_VERSION} as alpine
 ARG TARGETARCH
 ARG COMPOSE_VERSION
+ARG COMPOSE_V1_INSTALL=no
 ARG HELM_VERSION
 ARG KUBESEAL_VERSION
 
@@ -61,7 +62,7 @@ RUN <<EOF
     aws-cli \
     bash \
     docker-cli \
-    docker-compose \
+    $([ "$COMPOSE_V1_INSTALL" != yes ] || docker-compose) \
     git \
     grep \
     jq \
@@ -109,6 +110,7 @@ ENTRYPOINT [ "/usr/local/bin/ws" ]
 FROM php:${PHP_MAJOR_VERSION}-cli-buster as buster
 ARG TARGETARCH
 ARG COMPOSE_VERSION
+ARG COMPOSE_V1_INSTALL=no
 ARG HELM_VERSION
 ARG KUBESEAL_VERSION
 
@@ -123,14 +125,16 @@ RUN <<EOF
   apt-get update -qq
 
   # docker compose v1
-  if [ "$TARGETARCH" = amd64 ]; then
-    curl --silent --show-error --fail --location "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-linux-$(uname -m)" -o /usr/local/bin/docker-compose
-    chmod +x /usr/local/bin/docker-compose
-  else
-    DEBIAN_FRONTEND=noninteractive apt-get -qq -y --no-install-recommends install \
-      python3-bcrypt python3-cryptography python3-pip python3-setuptools python3-dev python3-nacl python3-wheel libffi-dev
-    pip3 install docker-compose
-    apt-get remove -qq -y python3-setuptools python3-dev
+  if [ "$COMPOSE_V1_INSTALL" = yes ]; then
+    if [ "$TARGETARCH" = amd64 ]; then
+      curl --silent --show-error --fail --location "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-linux-$(uname -m)" -o /usr/local/bin/docker-compose
+      chmod +x /usr/local/bin/docker-compose
+    else
+      DEBIAN_FRONTEND=noninteractive apt-get -qq -y --no-install-recommends install \
+        python3-bcrypt python3-cryptography python3-pip python3-setuptools python3-dev python3-nacl python3-wheel libffi-dev
+      pip3 install docker-compose
+      apt-get remove -qq -y python3-setuptools python3-dev
+    fi
   fi
 
   # docker compose v2
