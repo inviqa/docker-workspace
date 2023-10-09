@@ -62,7 +62,7 @@ RUN <<EOF
     aws-cli \
     bash \
     docker-cli \
-    $([ "$COMPOSE_V1_INSTALL" != yes ] || docker-compose) \
+    $([ "$COMPOSE_V1_INSTALL" != yes ] || echo docker-compose) \
     git \
     grep \
     jq \
