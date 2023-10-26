@@ -64,6 +64,7 @@ RUN <<EOF
     docker-cli \
     $([ "$COMPOSE_V1_INSTALL" != yes ] || echo docker-compose) \
     git \
+    git-lfs \
     grep \
     jq \
     openssh-client \
