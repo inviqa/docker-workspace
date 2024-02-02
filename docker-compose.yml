@@ -6,7 +6,7 @@ services:
       args:
         WS_VERSION: 0.4.x
         PHP_MAJOR_VERSION: '8.2'
-        ALPINE_VERSION: '3.18'
+        ALPINE_VERSION: '3.19'
       x-bake:
         tags:
           - quay.io/inviqa_images/workspace:0.4.x-dev
