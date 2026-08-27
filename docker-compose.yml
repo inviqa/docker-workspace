@@ -1,4 +1,16 @@
 services:
+  0.5.x:
+    build:
+      context: .
+      target: alpine
+      args:
+        WS_VERSION: 0.5.x
+        PHP_MAJOR_VERSION: '8.5'
+        ALPINE_VERSION: '3.24'
+      x-bake:
+        tags:
+          - quay.io/inviqa_images/workspace:0.5.x-dev
+          - quay.io/inviqa_images/workspace:latest
   0.4.x:
     build:
       context: .
@@ -21,7 +33,6 @@ services:
       x-bake:
         tags:
           - quay.io/inviqa_images/workspace:0.3.x-dev
-          - quay.io/inviqa_images/workspace:latest
   0.2.x:
     build:
       context: .
